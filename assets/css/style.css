@@ -1,0 +1,28 @@
+body {
+  background-image: url("../images/woodbackground.jpg");
+  box-sizing: border-box;
+  width: 100%;
+}
+
+
+#jumbotron1 {
+  opacity: 0.2;
+  color: blue;
+  text-align: center;
+  height: 180px;
+  line-height: 60px;
+}
+
+.card {
+  margin: 20px;
+}
+
+
+.card-header {
+  background-color: burlywood;
+  color: blue;
+}
+
+#main-form {
+  margin: 20px;
+}
