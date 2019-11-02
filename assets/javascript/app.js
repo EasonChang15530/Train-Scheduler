@@ -22,15 +22,15 @@ $(document).ready(function () {
     var getDestination = $("#destinationInput").val().trim();
     // This variable is not displayed
     // This line has question !!!
-    var getFirstTrainTime = moment($("#firstTrainTimeInput").val().trim(), "HH:mm").format("X");
-    var getFrequency = $("#frequencyInput").val().trim();
+    var getFirstTrainTime = $("#firstTrainTimeInput").val().trim();
+    var gepulledFrequency = $("#frequencyInput").val().trim();
 
     // Creates local object for holding train data
     var trainInfo = {
       trainName: getTrainName,
       destination: getDestination,
       firstTrainTime: getFirstTrainTime,
-      frequency: getFrequency,
+      frequency: gepulledFrequency,
     };
 
     // Uploads train data to the database
@@ -53,25 +53,39 @@ $(document).ready(function () {
     var pulledFirstTrainTime = childSnapshot.val().firstTrainTime;
     var pulledFrequency = childSnapshot.val().frequency;
 
-    // // Prettify the employee start
-    // var empStartPretty = moment.unix(empStart).format("MM/DD/YYYY");
-    // console.log(empStartPretty);
-    // console.log("----------------------------");
-    // // Calculate the months worked using hardcore math
-    // // To calculate the months worked
-    // var empMonths = moment().diff(moment(empStart, "X"), "months");
-    // console.log(empMonths);
+    // First Time (pushed back 1 year to make sure it comes before current time)
+    var pulledFirstTrainTimeConverted = moment(pulledFirstTrainTime, "HH:mm").subtract(1, "years");
+    console.log(pulledFirstTrainTimeConverted);
 
+    // Current Time
+    var currentTime = moment();
+    console.log("CURRENT TIME: " + moment(currentTime).format("DD/MM/YYYY"));
+
+    // Difference between the times
+    var diffTime = moment().diff(moment(pulledFirstTrainTimeConverted), "minutes");
+    console.log("DIFFERENCE IN TIME: " + diffTime);
+    console.log("-----------------");
+    // Time apart (remainder)
+    var remainder = diffTime % pulledFrequency;
+    console.log(remainder);
+
+    // Minute Until Train
+    var minutesAway = pulledFrequency - remainder;
+    console.log("MINUTES TILL TRAIN: " + minutesAway);
+
+    // Next Train
+    var nextTrain = moment().add(minutesAway, "minutes");
+    var nextArrival = moment(nextTrain).format("hh:mm");
+    
     var newRow = $("<tr>");
     var trainNameTd = $("<td>").text(pulledTrainName);
     var destinationTd = $("<td>").text(pulledDestination);
     var frequencyTd = $("<td>").text(pulledFrequency);
+    var nextArrivalTd = $("<td>").text(nextArrival);
+    var minutesAwayTd = $("<td>").text(minutesAway);
   
-    newRow.append(trainNameTd, destinationTd, frequencyTd);
+    newRow.append(trainNameTd, destinationTd, frequencyTd, nextArrivalTd, minutesAwayTd);
     $("tbody").append(newRow);
   });
-
-
-
 
 });
